@@ -47,7 +47,6 @@ const CategoryForm = () => {
       toast("Category created")
     } catch (err) {
       toast(err instanceof Error ? err.message : "Unknown error")
-
     }
   }
 

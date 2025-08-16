@@ -161,7 +161,7 @@ const ProductForm = () => {
                         <div>error getting categories</div>
                       ) : categories.length === 0 ? (
                         <div>you have 0 category</div>
-                      ) : categories.map((category: Category) => (
+                      ) : categories?.map((category: Category) => (
                         <SelectItem key={category.id} value={category.id.toString()}>{category.name}</SelectItem>
                       ))}
                     </SelectGroup>
