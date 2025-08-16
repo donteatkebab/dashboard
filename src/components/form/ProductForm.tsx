@@ -59,13 +59,13 @@ const ProductForm = () => {
     getCategories()
   }, [])
 
-  const form = useForm<z.input<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       name: "",
       slug: "",
-      price: "",
-      categoryId: "",
+      price: 0,
+      categoryId: 0,
       image: "/placeholder.svg",
       description: "",
       shortDescription: "",
