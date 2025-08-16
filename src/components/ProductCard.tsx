@@ -6,7 +6,9 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "./ui/button"
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product }: { product?: Product }) {
+  if (!product) return null
+
   return (
     <Card className="overflow-hidden pt-0 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200">
       <div className="relative w-full h-48">
