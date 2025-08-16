@@ -1,13 +1,19 @@
 "use client"
 import React, { useState, useEffect } from "react"
+
+import FormModal from "@/components/form/FormModal"
+import ProductForm from "@/components/form/ProductForm"
+
 import { Product } from "@/types/product"
-import ProductCard from "@/components/ProductCard"
+
+import { DataTable } from "@/components/table/data-table"
+import { productColumn } from "./productColumn"
 
 const page = () => {
   const [products, setProducts] = useState<Product[]>([])
 
   useEffect(() => {
-    async function getProducts() {
+    const getProducts = async () => {
       try {
         const res = await fetch("/api/products")
         const data = await res.json()
@@ -21,13 +27,12 @@ const page = () => {
   }, [])
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-6">
-      {products.length === 0
-        ? (
-          <div>there is not a product in database</div>
-        )
-        : products.map((product: Product) => <ProductCard key={product.id} product={product} />)
-      }
+    <div>
+      <DataTable columns={productColumn} data={products}>
+        <FormModal title="Create Product" triggerTitle="Create Product">
+          <ProductForm />
+        </FormModal>
+      </DataTable>
     </div>
   )
 }
