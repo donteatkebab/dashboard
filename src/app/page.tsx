@@ -26,7 +26,7 @@ const page = () => {
         ? (
           <div>there is not a product in database</div>
         )
-        : products?.map((product: Product) => <ProductCard key={product.id} product={product} />)
+        : products?.map((product: Product) => product && <ProductCard key={product.id} product={product} />)
       }
     </div>
   )
