@@ -4,7 +4,7 @@ import { Product } from "@/types/product"
 import ProductCard from "@/components/ProductCard"
 
 const page = () => {
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<Product[] | null>(null)
 
   useEffect(() => {
     async function getProducts() {
@@ -22,7 +22,7 @@ const page = () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-6">
-      {products.length === 0
+      {!products ? (<div>there is not a product in database</div>) : products.length === 0
         ? (
           <div>there is not a product in database</div>
         )
