@@ -59,13 +59,13 @@ const ProductForm = () => {
     getCategories()
   }, [])
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.input<typeof formSchema>>({
     resolver: zodResolver(formSchema) as any,
     defaultValues: {
       name: "",
       slug: "",
-      price: 0,
-      categoryId: 0,
+      price: "",
+      categoryId: "",
       image: "/placeholder.svg",
       description: "",
       shortDescription: "",
@@ -75,7 +75,7 @@ const ProductForm = () => {
   })
 
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.input<typeof formSchema>) {
     try {
       const res = await fetch("/api/products", {
         method: "POST",
@@ -124,7 +124,7 @@ const ProductForm = () => {
           )}
         />
 
-        {/* Regular Price */}
+        {/* Price */}
         <FormField
           control={form.control}
           name="price"
