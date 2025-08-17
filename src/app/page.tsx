@@ -21,12 +21,16 @@ const page = () => {
   }, [])
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-6">
+    <div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2 md:gap-4 pb-6">
       {!products ? (<div>there is not a product in database</div>) : products.length === 0
         ? (
           <div>there is not a product in database</div>
         )
-        : products?.map((product: Product) => <ProductCard key={product.id} product={product} />)
+        : products?.map((product: Product) => (
+          <div key={product.id} className="break-inside-avoid mb-2">
+            <ProductCard product={product} />
+          </div>
+        ))
       }
     </div>
   )
