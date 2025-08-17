@@ -39,7 +39,7 @@ const formSchema = z.object({
   description: z.string().optional(),
   shortDescription: z.string().optional(),
   inStock: z.boolean().default(true),
-  featured: z.boolean().default(false)
+  featured: z.boolean().default(false),
 })
 
 const ProductForm = () => {
@@ -59,7 +59,19 @@ const ProductForm = () => {
     getCategories()
   }, [])
 
-  const form = useForm<z.input<typeof formSchema>>({
+  type FormValues = {
+    name: string
+    slug: string
+    price: string
+    categoryId: string
+    image: string
+    description?: string
+    shortDescription?: string
+    inStock: boolean
+    featured: boolean
+  }
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema) as any,
     defaultValues: {
       name: "",
@@ -70,7 +82,7 @@ const ProductForm = () => {
       description: "",
       shortDescription: "",
       inStock: true,
-      featured: false
+      featured: false,
     },
   })
 

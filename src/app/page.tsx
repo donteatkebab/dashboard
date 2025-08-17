@@ -5,20 +5,26 @@ import ProductCard from "@/components/ProductCard"
 
 const page = () => {
   const [products, setProducts] = useState<Product[] | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     async function getProducts() {
       try {
+        setIsLoading(true)
         const res = await fetch("/api/products")
         const data = await res.json()
         setProducts(data)
+        setIsLoading(false)
       } catch {
         console.log("error getting products")
+        setIsLoading(false)
       }
     }
 
     getProducts()
   }, [])
+
+  if (isLoading) return <div>Loading products...</div>
 
   return (
     <div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2 md:gap-4 pb-6">

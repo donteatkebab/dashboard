@@ -11,15 +11,19 @@ import { productColumn } from "./productColumn"
 
 const page = () => {
   const [products, setProducts] = useState<Product[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const getProducts = async () => {
       try {
+        setIsLoading(true)
         const res = await fetch("/api/products")
         const data = await res.json()
         setProducts(data)
+        setIsLoading(false)
       } catch {
         console.log("error getting products")
+        setIsLoading(false)
       }
     }
 
@@ -28,7 +32,7 @@ const page = () => {
 
   return (
     <div>
-      <DataTable columns={productColumn} data={products}>
+      <DataTable columns={productColumn} data={products} isLoading={isLoading}>
         <FormModal title="Create Product" triggerTitle="Create Product">
           <ProductForm />
         </FormModal>
