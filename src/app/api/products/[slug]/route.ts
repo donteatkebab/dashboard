@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { slug: string } }
-) {
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+): Promise<NextResponse> {
   try {
+    const { slug } = await params
+
     const product = await prisma.product.findUnique({
-      where: { slug: params.slug },
-      include: { category: true },
+      where: { slug },
+      include: { category: true }
     })
 
     if (!product) {
