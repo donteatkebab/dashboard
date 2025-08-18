@@ -3,36 +3,20 @@ import React, { useState, useEffect } from "react"
 
 import FormModal from "@/components/form/FormModal"
 import CategoryForm from "@/components/form/CategoryForm"
-
 import { Category } from "@/types/category"
-
 import { DataTable } from "@/components/table/data-table"
 import { categoryColumn } from "./categoryColumn"
+import useSWR from "swr"
+
+const fetcher = (url: string) => fetch(url).then(res => res.json())
+
 
 const page = () => {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-
-  useEffect(() => {
-    const getCategories = async () => {
-      try {
-        setIsLoading(true)
-        const res = await fetch("/api/categories")
-        const data = await res.json()
-        setCategories(data)
-        setIsLoading(false)
-      } catch {
-        console.log("error getting categories")
-        setIsLoading(false)
-      }
-    }
-
-    getCategories()
-  }, [])
+  const { data: categories, error, isLoading } = useSWR<Category[]>("/api/categories", fetcher)
 
   return (
     <div>
-      <DataTable columns={categoryColumn} data={categories} isLoading={isLoading}>
+      <DataTable columns={categoryColumn} data={categories ?? []} error={error} isLoading={isLoading}>
         <FormModal title="Create Category" triggerTitle="Create Category">
           <CategoryForm />
         </FormModal>

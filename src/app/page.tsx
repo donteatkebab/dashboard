@@ -1,30 +1,16 @@
 "use client"
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { Product } from "@/types/product"
 import ProductCard from "@/components/ProductCard"
+import useSWR from "swr"
+
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 const page = () => {
-  const [products, setProducts] = useState<Product[] | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const { data: products, error, isLoading } = useSWR<Product[]>("/api/products", fetcher)
 
-  useEffect(() => {
-    async function getProducts() {
-      try {
-        setIsLoading(true)
-        const res = await fetch("/api/products")
-        const data = await res.json()
-        setProducts(data)
-        setIsLoading(false)
-      } catch {
-        console.log("error getting products")
-        setIsLoading(false)
-      }
-    }
-
-    getProducts()
-  }, [])
-
-  if (isLoading) return <div>Loading products...</div>
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Failed to load products</div>
 
   return (
     <div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2 md:gap-4 pb-6">

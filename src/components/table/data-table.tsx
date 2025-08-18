@@ -28,6 +28,7 @@ import { DataTablePagination } from "@/components/table/DataTablePagination"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  error: any
   isLoading: boolean
   children: React.ReactNode
 }
@@ -41,6 +42,7 @@ declare module "@tanstack/react-table" {
 export function DataTable<TData, TValue>({
   columns,
   data,
+  error,
   isLoading,
   children
 }: DataTableProps<TData, TValue>) {
@@ -124,9 +126,16 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  {isLoading ? <>Loading...</> : <>No results.</>}
+                  {isLoading ? (
+                    <>Loading...</>
+                  ) : error ? (
+                    <>Error getting data.</>
+                  ) : data && data.length === 0 ? (
+                    <>No results.</>
+                  ) : null}
                 </TableCell>
               </TableRow>
+
             )}
           </TableBody>
         </Table>
