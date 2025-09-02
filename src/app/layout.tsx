@@ -4,9 +4,6 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 
-import { AppSidebar } from "@/components/app-sidebar"
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
-
 import Header from "@/components/Header"
 
 import { Toaster } from "@/components/ui/sonner"
@@ -42,21 +39,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider
-            style={
-              {
-                "--sidebar-width": "19rem",
-              } as React.CSSProperties
-            }
-          >
-            <AppSidebar />
-            <SidebarInset>
-              <Header />
-              <div className="container px-4">
-                {children}
-              </div>
-            </SidebarInset>
-          </SidebarProvider>
+          <Header />
+          <div className="container mx-auto px-4 py-8 flex flex-col gap-6">
+            {children}
+          </div>
           <Toaster />
         </ThemeProvider>
       </body>

@@ -1,5 +1,5 @@
 "use client"
-import React from "react"
+import React, { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -17,7 +17,10 @@ import { Input } from "@/components/ui/input"
 import { DialogClose } from "../ui/dialog"
 import { toast } from "sonner"
 
-// ✅ Zod schema for validation
+import { Loader2Icon } from "lucide-react"
+
+import { mutate } from "swr"
+
 const formSchema = z.object({
   name: z.string().min(4, { message: "Name must be at least 4 characters." }),
   slug: z.string().min(4, { message: "Slug must be at least 4 characters." }),
@@ -25,6 +28,8 @@ const formSchema = z.object({
 })
 
 const CategoryForm = () => {
+  const [isLoading, setIsLoading] = useState(false)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,6 +41,8 @@ const CategoryForm = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      setIsLoading(true)
+
       const res = await fetch("/api/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -44,11 +51,19 @@ const CategoryForm = () => {
 
       if (!res.ok) throw new Error("Failed to create category")
 
-      toast("Category created")
+      toast("Category created!")
+
+      form.reset()
+
+      mutate("/api/categories")
+
     } catch (err) {
       toast(err instanceof Error ? err.message : "Unknown error")
+    } finally {
+      setIsLoading(false)
     }
   }
+
 
   return (
     <Form {...form}>
@@ -105,7 +120,17 @@ const CategoryForm = () => {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit">Create Category</Button>
+          <Button
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2Icon className="animate-spin" />
+                Please wait
+              </>
+            ) : "Create Category"}
+          </Button>
         </div>
       </form>
     </Form>

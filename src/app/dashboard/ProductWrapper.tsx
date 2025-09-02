@@ -1,5 +1,6 @@
 "use client"
 import React from "react"
+
 import FormModal from "@/components/form/FormModal"
 import ProductForm from "@/components/form/ProductForm"
 import { Product } from "@/types/product"
@@ -9,7 +10,7 @@ import useSWR from "swr"
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
-const page = () => {
+export default function ProductWrapper() {
   const { data: products, error, isLoading } = useSWR<Product[]>("/api/products", fetcher)
 
   return (
@@ -23,4 +24,3 @@ const page = () => {
   )
 }
 
-export default page

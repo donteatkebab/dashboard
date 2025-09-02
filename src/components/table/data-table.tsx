@@ -42,8 +42,8 @@ declare module "@tanstack/react-table" {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  error,
   isLoading,
+  error,
   children
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({})
@@ -69,7 +69,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex flex-row items-center justify-between pb-4">
+      <div className="flex flex-row items-center justify-between pb-4 gap-4">
         <div className="flex items-center">
           <Input
             placeholder="Search name..."
@@ -83,9 +83,7 @@ export function DataTable<TData, TValue>({
             className="max-w-sm"
           />
         </div>
-        <div>
-          {children}
-        </div>
+        <div>{children}</div>
       </div>
 
       {/* table */}
@@ -129,9 +127,9 @@ export function DataTable<TData, TValue>({
                   {isLoading ? (
                     <>Loading...</>
                   ) : error ? (
-                    <>Error getting data.</>
+                    <>Error getting data!</>
                   ) : data && data.length === 0 ? (
-                    <>No results.</>
+                    <>No results!</>
                   ) : null}
                 </TableCell>
               </TableRow>

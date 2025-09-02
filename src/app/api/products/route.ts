@@ -2,9 +2,40 @@ import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
 // GET
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const products = await prisma.product.findMany({ include: { category: true } })
+    const { searchParams } = new URL(req.url)
+
+    const search = searchParams.get("search") || undefined
+    const category = searchParams.get("category") || undefined
+    const sort = searchParams.get("sort") || "newest"
+    const minPrice = searchParams.get("minPrice")
+    const maxPrice = searchParams.get("maxPrice")
+
+    const products = await prisma.product.findMany({
+      where: {
+        AND: [
+          search ? { name: { contains: search, mode: "insensitive" } } : {},
+          category ? { category: { name: category } } : {},
+          minPrice ? { price: { gte: parseFloat(minPrice) } } : {},
+          maxPrice ? { price: { lte: parseFloat(maxPrice) } } : {},
+        ],
+      },
+      orderBy:
+        sort === "price-asc"
+          ? { price: "asc" }
+          : sort === "price-desc"
+            ? { price: "desc" }
+            : sort === "name-asc"
+              ? { name: "asc" }
+              : sort === "name-desc"
+                ? { name: "desc" }
+                : sort === "oldest"
+                  ? { createdAt: "asc" }
+                  : { createdAt: "desc" },
+      include: { category: true },
+    })
+
     return NextResponse.json(products)
   } catch (err) {
     console.error("Error fetching products:", err)
@@ -14,6 +45,8 @@ export async function GET() {
     )
   }
 }
+
+
 
 // POST
 export async function POST(req: Request) {

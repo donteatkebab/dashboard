@@ -25,6 +25,9 @@ import { Button } from "@/components/ui/button"
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
 import { Category } from "@/types/category"
 
+import { mutate } from "swr"
+import { toast } from "sonner"
+
 export const productColumn: ColumnDef<Product>[] = [
   {
     id: "select",
@@ -108,6 +111,26 @@ export const productColumn: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const product = row.original
 
+      const handleDelete = async () => {
+        try {
+          const res = await fetch("/api/products", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: product.id }),
+          })
+
+          if (!res.ok) {
+            const data = await res.json()
+            throw new Error(data.error)
+          }
+
+          toast("Product deleted!")
+          mutate("/api/products")
+        } catch (err) {
+          toast(err instanceof Error ? err.message : "Unknown error")
+        }
+      }
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -117,13 +140,9 @@ export const productColumn: ColumnDef<Product>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.id.toString())}
-            >
-              Edit
+            <DropdownMenuItem variant="destructive" onClick={handleDelete}>
+              Delete
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

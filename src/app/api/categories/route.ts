@@ -85,7 +85,7 @@ export async function DELETE(req: Request) {
     if (error.code === "P2025") {
       return NextResponse.json({ error: "Category not found" }, { status: 404 })
     }
-    return NextResponse.json({ error: "Failed to delete category" }, { status: 500 })
+    return NextResponse.json({ error: "Failed to delete category! the category has products inside!" }, { status: 500 })
   }
 }
 

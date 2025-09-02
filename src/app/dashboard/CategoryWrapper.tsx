@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from "react"
+import React from "react"
 
 import FormModal from "@/components/form/FormModal"
 import CategoryForm from "@/components/form/CategoryForm"
@@ -10,9 +10,8 @@ import useSWR from "swr"
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
-
-const page = () => {
-  const { data: categories, error, isLoading } = useSWR<Category[]>("/api/categories", fetcher)
+export default function CategoryWrapper() {
+  const { data: categories, isLoading, error } = useSWR<Category[]>("/api/categories", fetcher)
 
   return (
     <div>
@@ -25,4 +24,3 @@ const page = () => {
   )
 }
 
-export default page

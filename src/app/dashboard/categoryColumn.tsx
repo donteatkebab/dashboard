@@ -15,12 +15,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
+
+import { mutate } from "swr"
+import { toast } from "sonner"
 
 export const categoryColumn: ColumnDef<Category>[] = [
   {
@@ -79,6 +81,26 @@ export const categoryColumn: ColumnDef<Category>[] = [
     cell: ({ row }) => {
       const category = row.original
 
+      const handleDelete = async () => {
+        try {
+          const res = await fetch("/api/categories", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: category.id }),
+          })
+
+          if (!res.ok) {
+            const data = await res.json()
+            throw new Error(data.error)
+          }
+
+          toast("Category deleted!")
+          mutate("/api/categories")
+        } catch (err) {
+          toast(err instanceof Error ? err.message : "Unknown error")
+        }
+      }
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -88,13 +110,9 @@ export const categoryColumn: ColumnDef<Category>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(category.id.toString())}
-            >
-              Edit
+            <DropdownMenuItem variant="destructive" onClick={handleDelete}>
+              Delete
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

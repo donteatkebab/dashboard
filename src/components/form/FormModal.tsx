@@ -21,7 +21,7 @@ const FormModal = ({ title, triggerTitle, children }: FormModalProps) => {
       <DialogTrigger asChild>
         <Button>{triggerTitle}</Button>
       </DialogTrigger>
-      <DialogContent aria-describedby="" className="max-w-lg">
+      <DialogContent aria-describedby="">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>

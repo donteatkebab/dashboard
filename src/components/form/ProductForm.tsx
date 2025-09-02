@@ -30,6 +30,10 @@ import {
 
 import { Category } from "../../types/category"
 
+import { Loader2Icon } from "lucide-react"
+
+import { mutate } from "swr"
+
 const formSchema = z.object({
   name: z.string().min(4, { message: "Name must be at least 4 characters." }),
   slug: z.string().min(4, { message: "Slug must be at least 4 characters." }),
@@ -44,6 +48,7 @@ const formSchema = z.object({
 
 const ProductForm = () => {
   const [categories, setCategories] = useState<Category[] | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const getCategories = async () => {
@@ -89,6 +94,7 @@ const ProductForm = () => {
 
   async function onSubmit(values: z.input<typeof formSchema>) {
     try {
+      setIsLoading(true)
       const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,9 +103,16 @@ const ProductForm = () => {
 
       if (!res.ok) throw new Error("Failed to create product")
 
-      toast("Product created")
+      toast("Product created!")
+
+      form.reset()
+
+      mutate("/api/products")
+
     } catch (err) {
       toast(err instanceof Error ? err.message : "Unknown error")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -169,13 +182,13 @@ const ProductForm = () => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Categories</SelectLabel>
-                      {!categories ? (
-                        <div>error getting categories</div>
-                      ) : categories.length === 0 ? (
-                        <div>you have 0 category</div>
-                      ) : categories?.map((category: Category) => (
+                      {categories && categories.length >= 0 ? (categories.map((category: Category) => (
                         <SelectItem key={category.id} value={category.id.toString()}>{category.name}</SelectItem>
-                      ))}
+                      ))) : (
+                        <div>
+                          No category in db!
+                        </div>
+                      )}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -271,7 +284,17 @@ const ProductForm = () => {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit">Create Product</Button>
+          <Button
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2Icon className="animate-spin" />
+                Please wait
+              </>
+            ) : "Create Product"}
+          </Button>
         </div>
       </form>
     </Form>

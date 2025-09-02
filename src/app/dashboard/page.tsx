@@ -1,9 +1,14 @@
-"use client"
 import React from "react"
+
+import CategoryWrapper from "./CategoryWrapper"
+import ProductWrapper from "./ProductWrapper"
 
 const page = () => {
   return (
-    <div>page</div>
+    <div className="flex flex-col gap-8">
+      <ProductWrapper />
+      <CategoryWrapper />
+    </div>
   )
 }
 
