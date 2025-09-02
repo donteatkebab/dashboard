@@ -17,7 +17,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
@@ -50,7 +49,7 @@ export const productColumn: ColumnDef<Product>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-    meta: { className: "w-[80px] px-2" },
+    meta: { className: "w-[30px] min-w-[30px] md:w-[60px] md:w-[60px]" },
   },
   {
     accessorKey: "image",
@@ -68,7 +67,7 @@ export const productColumn: ColumnDef<Product>[] = [
         />
       )
     },
-    meta: { className: "w-[160px] px-2" },
+    meta: { className: "w-[30px] min-w-[30px] md:w-[120px] md:min-w-[120px]" },
   },
   {
     accessorKey: "name",

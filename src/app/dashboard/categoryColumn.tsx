@@ -46,7 +46,7 @@ export const categoryColumn: ColumnDef<Category>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-    meta: { className: "w-[80px] px-2" },
+    meta: { className: "w-[30px] min-w-[30px] md:w-[60px] md:w-[60px]" },
   },
 
   {
@@ -65,7 +65,7 @@ export const categoryColumn: ColumnDef<Category>[] = [
         />
       )
     },
-    meta: { className: "w-[160px] px-2" },
+    meta: { className: "w-[30px] min-w-[30px] md:w-[120px] md:min-w-[120px]" },
   },
   {
     accessorKey: "name",
